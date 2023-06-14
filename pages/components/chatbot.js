@@ -7,6 +7,8 @@ import CarDetailsForm from './CarDetailsForm';
 
 
 
+
+
 function ChatBox() {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -17,6 +19,12 @@ function ChatBox() {
     });
     const [showForm, setShowForm] = useState(!process.env.OPENAI_API_KEY);
     const [carDetails, setCarDetails] = useState(null);
+    const [locationAccess, setLocationAccess] = useState(null);
+    const [nearbyShops, setNearbyShops] = useState([]);
+    const [locationPromptShown, setLocationPromptShown] = useState(false);
+
+
+
 
     const handleApiKeys = (keys) => {
         console.log("Keys submitted: ", keys);
@@ -47,12 +55,53 @@ function ChatBox() {
         setMessages(prevMessages => [...prevMessages, { text: data.response, sender: 'ai' }]);
     };
 
+    async function fetchNearbyShops() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async position => {
+                const { latitude, longitude } = position.coords;
+                console.log("Latitude:", latitude, "Longitude:", longitude);
+                const response = await fetch(`/api/shops?latitude=${latitude}&longitude=${longitude}`);
+                const data = await response.json();
+                // data.results now contains a list of nearby car repair shops
+
+                // set the state with the result.
+                setNearbyShops(data.results);
+            }, (error) => {
+                console.error(error);
+                // Handle error...
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+            // Handle error...
+        }
+    }
+
+
     return (
         <div className="chat-box">
             {showForm ? (
                 <ApiKeyForm onApiKeySubmit={handleApiKeys} />
             ) : !chatStarted ? (
-                <CarDetailsForm onDetailsSubmit={handleCarDetails} />
+                locationPromptShown ? (
+                    <CarDetailsForm onDetailsSubmit={handleCarDetails} />
+                ) : (
+                    <div>
+                        <button onClick={() => {
+                            navigator.geolocation.getCurrentPosition(
+                                position => {
+                                    setLocationAccess(true);  // success callback
+                                    setLocationPromptShown(true);
+                                },
+                                error => {
+                                    setLocationAccess(false);  // error callback
+                                    setLocationPromptShown(true);
+                                }
+                            );
+                        }}>
+                            Allow location access
+                        </button>
+                    </div>
+                )
             ) : (
                 <>
                     <div>
@@ -80,6 +129,15 @@ function ChatBox() {
                             </div>
                         </form>
                     </div>
+                    <button onClick={fetchNearbyShops}>Find Nearby Shops</button>
+                    {nearbyShops.map((shop, index) => (
+                        <div key={index}>
+                            <h3>{shop.name}</h3>
+                            <p>{shop.vicinity}</p>
+                            <a href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${shop.place_id}`} target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+                        </div>
+                    ))}
+
                 </>
             )}
         </div>
