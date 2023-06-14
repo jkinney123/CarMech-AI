@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 
 function ApiKeyForm({ onApiKeySubmit }) {
     const [openaiKey, setOpenaiKey] = useState('');
-    const [googleCSEKey, setGoogleCSEKey] = useState('');
-    const [googleCSEID, setGoogleCSEID] = useState('');
+    const [model, setModel] = useState('gpt-4');
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        onApiKeySubmit({ openaiKey, googleCSEKey, googleCSEID });
+        onApiKeySubmit({ openaiKey, model });
     };
 
     return (
@@ -20,17 +19,13 @@ function ApiKeyForm({ onApiKeySubmit }) {
                     (required-) OpenAI API Key:
                     <input type="text" value={openaiKey} onChange={(e) => setOpenaiKey(e.target.value)} required />
                 </label>
-                <p>If you would like images generated, submit your Google Programmable Search Engine API and ID (can be created <a href="https://developers.google.com/custom-search/docs/paid_element">here</a>). The Programmable Search Element API charges $5 per 1000 ad-free search element queries, although you will probably not reach this query limit and the API should remain free. This is optional, but recommended.</p>
-                <label>
-                    (optional-) Google CSE API Key:
-                    <input type="text" value={googleCSEKey} onChange={(e) => setGoogleCSEKey(e.target.value)} />
-                </label>
-                <label>
-                    (optional-) Google CSE ID:
-                    <input type="text" value={googleCSEID} onChange={(e) => setGoogleCSEID(e.target.value)} />
-                </label>
                 <input type="submit" value="Submit" />
             </form>
+            <label>
+                Model:
+                <input type="radio" name="model" value="gpt-4" checked={model === 'gpt-4'} onChange={(e) => setModel(e.target.value)} /> GPT-4
+                <input type="radio" name="model" value="gpt-3.5-turbo" checked={model === 'gpt-3.5-turbo'} onChange={(e) => setModel(e.target.value)} /> GPT-3.5-Turbo
+            </label>
         </div>
     );
 }

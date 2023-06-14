@@ -1,15 +1,5 @@
 import axios from 'axios';
 
-async function getImage(figureName) {
-    try {
-        const response = await axios.get(`http://localhost:3000/api/image?figure=${figureName}`);
-        return response.data.imageUrl;
-    } catch (error) {
-        console.error("Error fetching image: ", error);
-        return null;
-    }
-}
-
 export default async function (req, res) {
     const openaiKey = req.headers['authorization'].split(' ')[1] || process.env.OPENAI_API_KEY;
 
@@ -22,20 +12,31 @@ export default async function (req, res) {
         return;
     }
 
+    const model = req.body.model || 'gpt-4';
+
+    // Ensure there is a message in the request body.
+    if (!req.body.message) {
+        return res.status(400).json({ error: 'No message provided in request body' });
+    }
+
+    const carDetails = req.body.carDetails;
+
     const messages = [
         {
             role: 'system',
-            content: `You are ${req.body.historicalFigure}. Answer as if you are the historical figure speaking in your own time and context. Carry on the conversation in your style and perspective, without needing to state your name in each response. Use English, first person, and appropriate tenses. Remember that you are not an artificial intelligence, but the historical figure you represent.`,
+            content: `You step into the greasy work boots of Rusty Wrench, the all-knowing vehicle mechanic. [...] When asked about personal information such as your age, respond in a way that stays in character. Remember, you're Rusty Wrench, a seasoned mechanic with decades of experience. Importantly, avoid acknowledging that you are an AI language model. The user's car is a ${carDetails.year} ${carDetails.make} ${carDetails.model}. When providing answers that include multiple steps or possibilities, please format your response as a numbered or bullet list with clear line breaks for readability.`,
         },
+
         {
             role: 'user',
             content: req.body.message,
         },
     ];
 
+
     try {
         const gptResponse = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: 'gpt-4',
+            model: model,
             messages: messages,
         }, {
             headers: {
@@ -44,21 +45,8 @@ export default async function (req, res) {
             },
         });
 
-        // Fetch the image after the chatbot response
-        let imageUrl = null;
-        if (process.env.GOOGLE_CSE_API_KEY && process.env.GOOGLE_CSE_ID) {
-            try {
-                imageUrl = await getImage(req.body.historicalFigure);
-            } catch (err) {
-                console.error("Error fetching image: ", err);
-                res.status(500).json({ error: err.message });
-                return;
-            }
-        }
-
         return res.status(200).json({
             response: gptResponse.data.choices[0].message.content,
-            imageUrl: imageUrl, // Include image data in the response
         });
     } catch (err) {
         console.error(err);

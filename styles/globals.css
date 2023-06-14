@@ -8,6 +8,10 @@ html {
 
 }
 
+p.message-content {
+    white-space: pre-line;
+}
+
 .apiForm {
     display: flex;
     flex-direction: column;
