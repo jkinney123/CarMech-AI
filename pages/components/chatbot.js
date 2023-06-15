@@ -22,6 +22,8 @@ function ChatBox() {
     const [locationAccess, setLocationAccess] = useState(null);
     const [nearbyShops, setNearbyShops] = useState([]);
     const [locationPromptShown, setLocationPromptShown] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState(null);
+
 
 
 
@@ -53,6 +55,15 @@ function ChatBox() {
         console.log(data);
         setIsTyping(false);
         setMessages(prevMessages => [...prevMessages, { text: data.response, sender: 'ai' }]);
+
+        const analyzeRes = await fetch('/api/analyzeAndSearch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: data.response }),
+        });
+        const analyzeData = await analyzeRes.json();
+        console.log(analyzeData);
+        setSearchKeyword(analyzeData.keyword);
     };
 
     async function fetchNearbyShops() {
@@ -60,7 +71,8 @@ function ChatBox() {
             navigator.geolocation.getCurrentPosition(async position => {
                 const { latitude, longitude } = position.coords;
                 console.log("Latitude:", latitude, "Longitude:", longitude);
-                const response = await fetch(`/api/shops?latitude=${latitude}&longitude=${longitude}`);
+                const keyword = searchKeyword || 'car repair';
+                const response = await fetch(`/api/shops?latitude=${latitude}&longitude=${longitude}&keyword=${keyword}`);
                 const data = await response.json();
                 // data.results now contains a list of nearby car repair shops
 
@@ -129,7 +141,8 @@ function ChatBox() {
                             </div>
                         </form>
                     </div>
-                    <button onClick={fetchNearbyShops}>Find Nearby Shops</button>
+                    <button onClick={fetchNearbyShops} style={{ display: messages.length > 0 && searchKeyword !== null ? 'block' : 'none' }}>Find nearby shops relevant to your issue</button>
+
                     {nearbyShops.map((shop, index) => (
                         <div key={index}>
                             <h3>{shop.name}</h3>
