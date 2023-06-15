@@ -1,5 +1,6 @@
-const fetch = require('node-fetch');
-const nlp = require('compromise');
+const natural = require('natural');
+const tokenizer = new natural.WordTokenizer();
+
 
 export default async function handler(req, res) {
     const { text } = req.body;
@@ -52,15 +53,37 @@ export default async function handler(req, res) {
         'warning light',
     ];
 
+    const repairWords = ['repair', 'fix', 'replace', 'service', 'maintenance'];
+    const purchaseWords = ['buy', 'purchase', 'order', 'need', 'get'];
+
     let keywordFrequencies = {};
+    let repairCount = 0;
+    let purchaseCount = 0;
+
+    // Convert text to lowercase
+    const lowerText = text.toLowerCase();
+
+    // Tokenize text into words
+    const words = tokenizer.tokenize(lowerText);
 
     // Iterate through carKeywords and count how many times each keyword appears in the text.
     for (let key of carKeywords) {
-        let count = (text.match(new RegExp("\\b" + key + "\\b", "gi")) || []).length;
+        let count = (lowerText.match(new RegExp("\\b" + key + "\\b", "gi")) || []).length;
         if (count > 0) {
             keywordFrequencies[key] = count;
         }
     }
+
+    words.forEach(word => {
+        if (repairWords.includes(word)) {
+            repairCount++;
+        }
+        else if (purchaseWords.includes(word)) {
+            purchaseCount++;
+        }
+    });
+
+    let prefix = repairCount >= purchaseCount ? 'car repair' : 'car parts';
 
     // Find the maximum frequency.
     let maxFrequency = Math.max(...Object.values(keywordFrequencies));
@@ -71,6 +94,9 @@ export default async function handler(req, res) {
     // If there's a single most frequent keyword, use it.
     // Otherwise, join all of the most frequent keywords into a single string.
     let keywordsString = mostFrequentKeywords.length === 1 ? mostFrequentKeywords[0] : mostFrequentKeywords.join(' ');
+
+    // Append the prefix to the keywordsString
+    keywordsString = `${prefix} ${keywordsString}`;
 
     res.status(200).json({ keyword: keywordsString });
 }
