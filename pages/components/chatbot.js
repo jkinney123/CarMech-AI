@@ -23,6 +23,8 @@ function ChatBox() {
     const [nearbyShops, setNearbyShops] = useState([]);
     const [locationPromptShown, setLocationPromptShown] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState(null);
+    const [allShops, setAllShops] = useState([]);
+    const [ratingFilter, setRatingFilter] = useState(null);
 
 
 
@@ -75,7 +77,7 @@ function ChatBox() {
                 const response = await fetch(`/api/shops?latitude=${latitude}&longitude=${longitude}&keyword=${keyword}`);
                 const data = await response.json();
                 // data.results now contains a list of nearby car repair shops
-
+                setAllShops(data.results);
                 // set the state with the result.
                 setNearbyShops(data.results);
             }, (error) => {
@@ -85,6 +87,16 @@ function ChatBox() {
         } else {
             console.log("Geolocation is not supported by this browser.");
             // Handle error...
+        }
+    }
+
+    function applyFilter(rating) {
+        setRatingFilter(rating);
+        if (rating === null) {
+            setNearbyShops(allShops);
+        } else {
+            const filteredShops = allShops.filter(shop => shop.rating >= rating);
+            setNearbyShops(filteredShops);
         }
     }
 
@@ -141,12 +153,25 @@ function ChatBox() {
                             </div>
                         </form>
                     </div>
-                    <button onClick={fetchNearbyShops} style={{ display: messages.length > 0 && searchKeyword !== null ? 'block' : 'none' }}>Find nearby shops relevant to your issue</button>
+                    <button onClick={fetchNearbyShops} style={{ display: messages.length > 0 && searchKeyword !== null ? 'block' : 'none' }}>Find closest shops relevant to your issue</button>
+                    {nearbyShops.length > 0 && (
+                        <div>
+                            <label>Filter by rating: </label>
+                            <select onChange={e => applyFilter(parseFloat(e.target.value))}>
+                                <option value={null}>All</option>
+                                <option value={3}>3+</option>
+                                <option value={3.5}>3.5+</option>
+                                <option value={4}>4+</option>
+                                <option value={4.5}>4.5+</option>
+                            </select>
+                        </div>
+                    )}
 
                     {nearbyShops.map((shop, index) => (
                         <div key={index}>
                             <h3>{shop.name}</h3>
                             <p>{shop.vicinity}</p>
+                            <p>Rating: {shop.rating} ({shop.user_ratings_total} reviews)</p>
                             <a href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${shop.place_id}`} target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
                         </div>
                     ))}
