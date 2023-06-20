@@ -171,6 +171,7 @@ function ChatBox() {
                         <div key={index}>
                             <h3>{shop.name}</h3>
                             <p>{shop.vicinity}</p>
+                            <div className="star-rating" style={{ '--rating': shop.rating }}></div>
                             <p>Rating: {shop.rating} ({shop.user_ratings_total} reviews)</p>
                             <a href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${shop.place_id}`} target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
                         </div>
@@ -179,6 +180,7 @@ function ChatBox() {
                 </>
             )}
         </div>
+
     );
 }
 

@@ -8,9 +8,50 @@ html {
 
 }
 
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2%;
+    /* adjust for padding */
+}
+
 p.message-content {
     white-space: pre-line;
 }
+
+header {
+    background-color: #366496;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    top: 0;
+    width: 100%;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+nav li {
+    float: left;
+}
+
+nav li p {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav li p:hover {
+    background-color: #111;
+}
+
 
 .apiForm {
     display: flex;
@@ -67,11 +108,18 @@ p.message-content {
     margin: 10px auto;
     background-color: #ffffff;
     /* Pure white background for contrast */
-    width: 960px;
+
     min-height: 500px;
     overflow: auto;
     box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
+    flex: 0 0 60%;
+
     /* Added a subtle box shadow */
+}
+
+.excerpt-box {
+    flex: 0 0 38%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .intro-header {
@@ -130,15 +178,6 @@ p.message-content {
     height: 90px;
     margin: 10px;
     padding: 10px;
-}
-
-img {
-    max-width: 300px;
-    max-height: 300px;
-    height: auto;
-    margin: 0 auto;
-    flex-shrink: 0;
-    /* Prevent the image from shrinking */
 }
 
 
@@ -282,9 +321,43 @@ footer {
 .container {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     min-height: 100vh;
 }
 
 .chat-box {
     flex-grow: 1;
+}
+
+.star-rating {
+    display: inline-block;
+    font-size: 20px;
+}
+
+.star-rating::before {
+    content: '★★★★★';
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, #ffc700 calc(var(--rating) / 5 * 100%), #e1e1e1 calc(var(--rating) / 5 * 100%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2%;
+    /* adjust for padding */
+}
+
+.chat-box {
+    flex: 0 0 60%;
+    /* takes up 60% of the width */
+    /* rest of your styles */
+}
+
+.excerpt-box {
+    flex: 0 0 20%;
+    /* takes up 38% of the width */
+    /* rest of your styles */
 }
