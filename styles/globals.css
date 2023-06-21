@@ -297,6 +297,12 @@ nav li p:hover {
     justify-content: center;
 }
 
+.img {
+    height: 400px;
+    width: 335px;
+}
+
+
 
 
 footer {
@@ -357,7 +363,62 @@ footer {
 }
 
 .excerpt-box {
-    flex: 0 0 20%;
-    /* takes up 38% of the width */
-    /* rest of your styles */
+    flex: 0 0 35%;
+    /* adjust as needed */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-wrapper {
+    position: relative;
+    height: 350px;
+    /* Reduced the height */
+    width: 100%;
+    display: flex;
+    /* Added for centering */
+    align-items: center;
+    /* Added for centering */
+    justify-content: center;
+    /* Added for centering */
+}
+
+.excerpt-img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+
+.thinking-bubble {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: -25px;
+    /* Adjust this as needed to position the bubble */
+    left: 50%;
+    transform: translateX(-50%);
+    background: url('/bubble.png') no-repeat center center;
+    background-size: cover;
+    animation: pulse 1s infinite;
+}
+
+
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

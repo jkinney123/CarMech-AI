@@ -1,13 +1,10 @@
 import React from 'react';
 
-function ExcerptBox() {
+function ExcerptBox({ isTyping }) {
     return (
-        <div className="excerpt-box">
-            <h2> CarMech AI </h2>
-            <h2> CarMech AI </h2>
-            <h2> CarMech AI </h2>
-            <h2> CarMech AI </h2>
-            <h2> CarMech AI </h2>
+        <div className="image-wrapper">
+            {isTyping && <div className="thinking-bubble"></div>}
+            <img className="excerpt-img" src="/Rusty-Wrench-AI.png" alt="Rusty Wrench" />
         </div>
     );
 }

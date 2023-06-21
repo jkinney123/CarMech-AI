@@ -9,11 +9,10 @@ import CarDetailsForm from './CarDetailsForm';
 
 
 
-function ChatBox() {
+function ChatBox({ isTyping, setIsTyping }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [chatStarted, setChatStarted] = useState(false);
-    const [isTyping, setIsTyping] = useState(false);
     const [apiKeys, setApiKeys] = useState({
         openaiKey: process.env.OPENAI_API_KEY || ''
     });
