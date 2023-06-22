@@ -14,9 +14,9 @@ function ChatBox({ isTyping, setIsTyping }) {
     const [newMessage, setNewMessage] = useState('');
     const [chatStarted, setChatStarted] = useState(false);
     const [apiKeys, setApiKeys] = useState({
-        openaiKey: process.env.OPENAI_API_KEY || ''
+        openaiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''
     });
-    const [showForm, setShowForm] = useState(!process.env.OPENAI_API_KEY);
+    const [showForm, setShowForm] = useState(true);
     const [carDetails, setCarDetails] = useState(null);
     const [locationAccess, setLocationAccess] = useState(null);
     const [nearbyShops, setNearbyShops] = useState([]);

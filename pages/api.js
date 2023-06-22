@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default async function (req, res) {
-    const openaiKey = req.headers['authorization'].split(' ')[1] || process.env.OPENAI_API_KEY;
+    const openaiKey = req.headers['authorization'].split(' ')[1] || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
     if (!openaiKey) {
         res.status(500).json({

@@ -4,10 +4,13 @@ import React, { useState } from 'react';
 function ApiKeyForm({ onApiKeySubmit }) {
     const [openaiKey, setOpenaiKey] = useState('');
     const [model, setModel] = useState('gpt-4');
+    const isFreeVersion = model === 'gpt-3.5-turbo';
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        onApiKeySubmit({ openaiKey, model });
+        // Use the key from the form if it was entered, otherwise use the key from the .env file
+        const finalOpenaiKey = isFreeVersion ? process.env.NEXT_PUBLIC_OPENAI_API_KEY : (openaiKey || process.env.NEXT_PUBLIC_OPENAI_API_KEY);
+        onApiKeySubmit({ openaiKey: finalOpenaiKey, model });
     };
 
     return (
@@ -16,8 +19,10 @@ function ApiKeyForm({ onApiKeySubmit }) {
             <p>If you do not own a GPT-4 API key from Open AI, you can apply to the waitlist located <a href="https://openai.com/waitlist/gpt-4-api">here</a>.</p>
             <form onSubmit={handleSubmit}>
                 <label>
-                    (required-) OpenAI API Key:
-                    <input type="text" value={openaiKey} onChange={(e) => setOpenaiKey(e.target.value)} required />
+                    {isFreeVersion ? 'Using Free Version' : 'OpenAI API Key (required)'}
+                    {!isFreeVersion && (
+                        <input type="text" value={openaiKey} onChange={(e) => setOpenaiKey(e.target.value)} required />
+                    )}
                 </label>
                 <input type="submit" value="Submit" />
             </form>
