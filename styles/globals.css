@@ -8,12 +8,6 @@ html {
 
 }
 
-.content-wrapper {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 2%;
-    /* adjust for padding */
-}
 
 p.message-content {
     white-space: pre-line;
@@ -374,32 +368,30 @@ footer {
 }
 
 .image-wrapper {
-    position: relative;
-    height: 350px;
-    /* Reduced the height */
-    width: 100%;
+    position: sticky;
+    top: 0;
+    margin-left: 20px;
     display: flex;
-    /* Added for centering */
-    align-items: center;
-    /* Added for centering */
     justify-content: center;
-    /* Added for centering */
+    align-items: center;
+    height: 100vh;
 }
 
 .excerpt-img {
-    max-height: 100%;
     max-width: 100%;
+    height: auto;
+    border-radius: 10px 10px 10px 10px;
 }
 
 
 .thinking-bubble {
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     position: absolute;
-    top: -25px;
-    /* Adjust this as needed to position the bubble */
-    left: 50%;
+    top: 120px;
+    /* Adjust this as needed to bring the bubble closer to the wrench image */
+    left: calc(50% - 50px);
     transform: translateX(-50%);
     background: url('/bubble.png') no-repeat center center;
     background-size: cover;
