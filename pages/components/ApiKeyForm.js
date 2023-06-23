@@ -15,11 +15,11 @@ function ApiKeyForm({ onApiKeySubmit }) {
 
     return (
         <div className="apiForm">
-            <p>To enter the application, please submit your Open AI GPT-4 API key below.</p>
-            <p>If you do not own a GPT-4 API key from Open AI, you can apply to the waitlist located <a href="https://openai.com/waitlist/gpt-4-api">here</a>.</p>
+            <p>To use the free version of this application, click the "GPT-3.5-Turbo" model and submit.</p>
+            <p>If you have access to the GPT-4 API, enter your key below. You can apply to the GPT-4 API waitlist located <a href="https://openai.com/waitlist/gpt-4-api">here</a>.</p>
             <form onSubmit={handleSubmit}>
                 <label>
-                    {isFreeVersion ? 'Using Free Version' : 'OpenAI API Key (required)'}
+                    {isFreeVersion ? 'Free Version' : 'OpenAI API Key (required)'}
                     {!isFreeVersion && (
                         <input type="text" value={openaiKey} onChange={(e) => setOpenaiKey(e.target.value)} required />
                     )}

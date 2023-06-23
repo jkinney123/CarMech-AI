@@ -33,6 +33,7 @@ function ChatBox({ isTyping, setIsTyping }) {
         console.log("Keys submitted: ", keys);
         setApiKeys(keys);
         setShowForm(false);
+        setLocationPromptShown(true);
     };
 
     const handleCarDetails = (details) => {
@@ -105,24 +106,21 @@ function ChatBox({ isTyping, setIsTyping }) {
             {showForm ? (
                 <ApiKeyForm onApiKeySubmit={handleApiKeys} />
             ) : !chatStarted ? (
-                locationPromptShown ? (
-                    <CarDetailsForm onDetailsSubmit={handleCarDetails} />
-                ) : (
+                locationPromptShown && (
                     <div>
                         <button onClick={() => {
                             navigator.geolocation.getCurrentPosition(
                                 position => {
                                     setLocationAccess(true);  // success callback
-                                    setLocationPromptShown(true);
                                 },
                                 error => {
                                     setLocationAccess(false);  // error callback
-                                    setLocationPromptShown(true);
                                 }
                             );
                         }}>
                             Allow location access
                         </button>
+                        <CarDetailsForm onDetailsSubmit={handleCarDetails} />
                     </div>
                 )
             ) : (
