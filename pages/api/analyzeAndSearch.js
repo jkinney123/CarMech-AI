@@ -196,8 +196,8 @@ export default async function handler(req, res) {
 
 
 
-    const repairWords = ['repair', 'fix', 'replace', 'service', 'maintenance'];
-    const purchaseWords = ['buy', 'purchase', 'order', 'need', 'get'];
+    const repairWords = ['repair', 'repaired', 'fix', 'fixed', 'service', 'serviced', 'maintenance', 'mechanic', 'professional'];
+    const purchaseWords = ['new', 'buy', 'purchase', 'purchased', 'order', 'ordered', 'need', 'get', 'replace'];
 
     let keywordFrequencies = {};
     let repairCount = 0;
