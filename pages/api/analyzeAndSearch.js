@@ -32,6 +32,8 @@ export default async function handler(req, res) {
         'coil',
         'compressor',
         'condenser',
+        'conditioning',
+        'air conditioning',
         'control arm',
         'coolant',
         'crankshaft',
