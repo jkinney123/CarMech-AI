@@ -131,6 +131,7 @@ function ChatBox({ isTyping, setIsTyping }) {
 
     return (
         <div className="chat-box">
+            <IntroHeader />
             {showForm ? (
                 <ApiKeyForm onApiKeySubmit={handleApiKeys} />
             ) : !chatStarted ? (

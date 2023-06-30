@@ -5,12 +5,12 @@ function IntroHeader({ chatStarted }) {
         <>
             {!chatStarted && (
                 <div className="intro-header">
-                    <h1>Car-MechAI</h1>
+                    <h1>Welcome to CarMech AI</h1>
                 </div>
             )}
             {chatStarted && (
                 <div className="intro-header">
-                    <h1>Car-MechAi</h1>
+                    <h1>Please describe your issue in detail</h1>
                 </div>
             )}
         </>
