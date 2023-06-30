@@ -4,6 +4,7 @@ import Message from './message';
 import IntroHeader from './IntroHeader';
 import ApiKeyForm from './ApiKeyForm';
 import CarDetailsForm from './CarDetailsForm';
+import LocationAccessPopup from './LocationAccessPopup';
 
 
 
@@ -18,12 +19,15 @@ function ChatBox({ isTyping, setIsTyping }) {
     });
     const [showForm, setShowForm] = useState(true);
     const [carDetails, setCarDetails] = useState(null);
+    const [showCarDetailsForm, setShowCarDetailsForm] = useState(false);
     const [locationAccess, setLocationAccess] = useState(null);
     const [nearbyShops, setNearbyShops] = useState([]);
     const [locationPromptShown, setLocationPromptShown] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState(null);
     const [allShops, setAllShops] = useState([]);
     const [ratingFilter, setRatingFilter] = useState(null);
+    const [showLocationAccessPopup, setShowLocationAccessPopup] = useState(false);
+    const [locationPromptDecisionMade, setLocationPromptDecisionMade] = useState(false);
 
 
 
@@ -34,7 +38,31 @@ function ChatBox({ isTyping, setIsTyping }) {
         setApiKeys(keys);
         setShowForm(false);
         setLocationPromptShown(true);
+        setShowLocationAccessPopup(true);
     };
+
+    const handleAllowLocationAccess = () => {
+        // Handle location access here
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                setLocationAccess(true);  // success callback
+                setShowLocationAccessPopup(false);
+
+            },
+            error => {
+                setLocationAccess(false);  // error callback
+            }
+        );
+        setLocationPromptDecisionMade(true);
+        setShowCarDetailsForm(true);
+    };
+    const handleDenyLocationAccess = () => {
+        setLocationAccess(false);
+        setShowLocationAccessPopup(false);
+        setLocationPromptDecisionMade(true);
+        setShowCarDetailsForm(true);
+    };
+
 
     const handleCarDetails = (details) => {
         setCarDetails(details);
@@ -108,19 +136,8 @@ function ChatBox({ isTyping, setIsTyping }) {
             ) : !chatStarted ? (
                 locationPromptShown && (
                     <div>
-                        <button onClick={() => {
-                            navigator.geolocation.getCurrentPosition(
-                                position => {
-                                    setLocationAccess(true);  // success callback
-                                },
-                                error => {
-                                    setLocationAccess(false);  // error callback
-                                }
-                            );
-                        }}>
-                            Allow location access
-                        </button>
-                        <CarDetailsForm onDetailsSubmit={handleCarDetails} />
+                        {showLocationAccessPopup && <LocationAccessPopup onAllowAccess={handleAllowLocationAccess} onDenyAccess={handleDenyLocationAccess} />}
+                        {locationPromptDecisionMade && !chatStarted && <CarDetailsForm onDetailsSubmit={handleCarDetails} />}
                     </div>
                 )
             ) : (
