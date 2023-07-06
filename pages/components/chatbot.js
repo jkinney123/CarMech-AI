@@ -168,7 +168,7 @@ function ChatBox({ isTyping, setIsTyping }) {
                             </div>
                         </form>
                     </div>
-                    <button onClick={fetchNearbyShops} style={{ display: messages.length > 0 && searchKeyword !== null ? 'block' : 'none' }}>Find closest shops relevant to your issue</button>
+                    <button id="fetchShopsBtn" onClick={fetchNearbyShops} style={{ display: messages.length > 0 && searchKeyword !== null ? 'block' : 'none' }}>Find closest shops relevant to your issue</button>
                     {nearbyShops.length > 0 && (
                         <div>
                             <label>Filter by rating: </label>
