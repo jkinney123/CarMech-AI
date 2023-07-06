@@ -21,6 +21,7 @@ function ChatBox({ isTyping, setIsTyping }) {
     const [carDetails, setCarDetails] = useState(null);
     const [showCarDetailsForm, setShowCarDetailsForm] = useState(false);
     const [locationAccess, setLocationAccess] = useState(null);
+    const [headerPhase, setHeaderPhase] = useState(0);
     const [nearbyShops, setNearbyShops] = useState([]);
     const [locationPromptShown, setLocationPromptShown] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState(null);
@@ -39,6 +40,7 @@ function ChatBox({ isTyping, setIsTyping }) {
         setShowForm(false);
         setLocationPromptShown(true);
         setShowLocationAccessPopup(true);
+        setHeaderPhase(1);
     };
 
     const handleAllowLocationAccess = () => {
@@ -55,18 +57,21 @@ function ChatBox({ isTyping, setIsTyping }) {
         );
         setLocationPromptDecisionMade(true);
         setShowCarDetailsForm(true);
+        setHeaderPhase(1);
     };
     const handleDenyLocationAccess = () => {
         setLocationAccess(false);
         setShowLocationAccessPopup(false);
         setLocationPromptDecisionMade(true);
         setShowCarDetailsForm(true);
+        setHeaderPhase(1);
     };
 
 
     const handleCarDetails = (details) => {
         setCarDetails(details);
-        setChatStarted(true); // start the chat after the car details are submitted
+        setChatStarted(true);
+        setHeaderPhase(2); // start the chat after the car details are submitted
     };
 
     const handleSend = async (event) => {
@@ -94,6 +99,7 @@ function ChatBox({ isTyping, setIsTyping }) {
         const analyzeData = await analyzeRes.json();
         console.log(analyzeData);
         setSearchKeyword(analyzeData.keyword);
+        setNewMessage('');
     };
 
     async function fetchNearbyShops() {
@@ -131,7 +137,7 @@ function ChatBox({ isTyping, setIsTyping }) {
 
     return (
         <div className="chat-box">
-            <IntroHeader />
+            <IntroHeader headerPhase={headerPhase} />
             {showForm ? (
                 <ApiKeyForm onApiKeySubmit={handleApiKeys} />
             ) : !chatStarted ? (

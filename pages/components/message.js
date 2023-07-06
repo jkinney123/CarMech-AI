@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Message({ message, sender, image, className }) {
+function Message({ message, sender, className }) {
     return (
         <div className={`message ${sender} ${className}`}>
             {sender === 'ai' && className === 'initial-message' ? (
